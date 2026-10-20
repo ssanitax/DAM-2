@@ -1,0 +1,108 @@
+INSERT INTO usuarios VALUES
+('Laura','Martínez García','laura.martinez@xystus.local','600123456','Pádel','Mensual',NULL),
+('Carlos','Sánchez López','carlos.sanchez@xystus.local','611234567','Tenis','Anual',NULL),
+('Marta','Gómez Navarro','marta.gomez@xystus.local','622345678','Natación','Trimestral',NULL),
+('David','Ruiz Fernández','david.ruiz@xystus.local','633456789','Fútbol sala','Bono 10',NULL),
+('Elena','Torres Romero','elena.torres@xystus.local','644567890','Pádel','Mensual',NULL),
+('Javier','Moreno Pérez','javier.moreno@xystus.local','655678901','Baloncesto','Anual',NULL),
+('Sara','Vidal Ortega','sara.vidal@xystus.local','666789012','Natación','Trimestral',NULL),
+('Alejandro','Gil Molina','alejandro.gil@xystus.local','677890123','Tenis','Mensual',NULL),
+('Lucía','Navarro Díaz','lucia.navarro@xystus.local','688901234','Pádel','Bono 10',NULL),
+('Pablo','Herrera Campos','pablo.herrera@xystus.local','699012345','Fútbol sala','Anual',NULL),
+('Irene','Castro Ruiz','irene.castro@xystus.local','600111222','Pádel','Anual',NULL),
+('Hugo','López Martín','hugo.lopez@xystus.local','600222333','Tenis','Mensual',NULL),
+('Nuria','Pérez Soto','nuria.perez@xystus.local','600333444','Natación','Mensual',NULL),
+('Óscar','Díaz Vega','oscar.diaz@xystus.local','600444555','Baloncesto','Trimestral',NULL),
+('Claudia','Román Gil','claudia.roman@xystus.local','600555666','Pádel','Bono 10',NULL),
+('Bruno','Sanz Ortiz','bruno.sanz@xystus.local','600666777','Fútbol sala','Mensual',NULL);
+
+INSERT INTO pistas VALUES
+('Pista Pádel 1','Pádel',1,18.00,NULL),
+('Pista Pádel 2','Pádel',0,14.00,NULL),
+('Pista Pádel 3','Pádel',1,20.00,NULL),
+('Pista Tenis A','Tenis',0,16.00,NULL),
+('Pista Tenis B','Tenis',1,20.00,NULL),
+('Sala Polideportiva','Fútbol sala',1,35.00,NULL),
+('Cancha Basket','Baloncesto',1,28.00,NULL),
+('Calle Natación 1','Natación',1,8.00,NULL),
+('Calle Natación 2','Natación',1,8.00,NULL),
+('Sala Multifunción','Baloncesto',1,30.00,NULL);
+
+INSERT INTO profesores VALUES
+('Ana','Martínez','Pádel','610111222',25.00,NULL),
+('Carlos','García','Tenis','610222333',28.00,NULL),
+('Laura','Sánchez','Natación','610333444',22.00,NULL),
+('Miguel','Torres','Fútbol sala','610444555',24.00,NULL),
+('Sofía','Navarro','Baloncesto','610555666',26.00,NULL),
+('David','Romero','Pádel','610666777',25.00,NULL),
+('Elena','Vega','Tenis','610777888',27.00,NULL),
+('Raúl','Mora','Natación','610888999',23.00,NULL);
+
+INSERT INTO stock VALUES
+('Pala pádel Pro','Material',20,45.00,'Almacén A',NULL),
+('Pala pádel Light','Material',35,28.00,'Almacén A',NULL),
+('Raqueta tenis','Material',18,55.00,'Almacén A',NULL),
+('Pelotas pádel (bote)','Consumible',80,4.50,'Almacén B',NULL),
+('Pelotas tenis (bote)','Consumible',60,5.00,'Almacén B',NULL),
+('Balón fútbol sala','Material',15,22.00,'Almacén C',NULL),
+('Balón baloncesto','Material',12,28.00,'Almacén C',NULL),
+('Gorro natación','Consumible',40,6.00,'Almacén B',NULL),
+('Red pádel','Material',6,120.00,'Almacén A',NULL),
+('Toalla club','Consumible',50,9.50,'Almacén B',NULL),
+('Botella agua','Consumible',100,2.50,'Almacén B',NULL),
+('Conos entrenamiento','Material',25,3.00,'Almacén C',NULL);
+
+INSERT INTO proveedores VALUES
+('SportSupply','Material deportivo','pedidos@sportsupply.es','963000111',NULL),
+('AquaGear','Natación','ventas@aquagear.es','963000222',NULL),
+('PadelWorld','Pádel','info@padelworld.es','963000333',NULL),
+('CourtPro','Mantenimiento pistas','soporte@courtpro.es','963000444',NULL),
+('BallHouse','Balones y material','hola@ballhouse.es','963000555',NULL);
+
+INSERT INTO reservas VALUES
+('2026-10-13','09:00','10:00','Confirmada',1,1,1,43.00,NULL),
+('2026-10-13','11:00','12:00','Confirmada',2,4,2,44.00,NULL),
+('2026-10-13','18:00','19:00','Pendiente',11,3,6,45.00,NULL),
+('2026-10-14','10:00','11:00','Confirmada',5,2,NULL,14.00,NULL),
+('2026-10-14','12:00','13:00','Confirmada',12,5,7,48.00,NULL),
+('2026-10-14','17:00','18:00','Cancelada',6,7,5,54.00,NULL),
+('2026-10-15','10:00','11:00','Confirmada',1,1,1,43.00,NULL),
+('2026-10-15','11:00','12:00','Confirmada',2,4,2,44.00,NULL),
+('2026-10-15','16:00','17:00','Confirmada',15,3,6,45.00,NULL),
+('2026-10-15','19:00','20:00','Pendiente',8,5,7,47.00,NULL),
+('2026-10-16','09:00','10:00','Pendiente',3,8,3,30.00,NULL),
+('2026-10-16','11:00','12:00','Confirmada',13,9,8,30.00,NULL),
+('2026-10-16','18:00','19:00','Confirmada',4,6,4,59.00,NULL),
+('2026-10-16','20:00','21:00','Confirmada',16,6,NULL,35.00,NULL),
+('2026-10-17','10:00','11:00','Confirmada',9,1,6,52.50,NULL),
+('2026-10-17','12:00','13:00','Pendiente',8,5,2,48.00,NULL),
+('2026-10-17','17:00','18:00','Confirmada',5,2,NULL,14.00,NULL),
+('2026-10-17','19:00','20:00','Cancelada',14,10,5,56.00,NULL),
+('2026-10-18','09:30','10:30','Confirmada',11,1,1,43.00,NULL),
+('2026-10-18','12:00','13:00','Confirmada',12,4,7,44.00,NULL),
+('2026-10-18','16:00','17:00','Pendiente',7,8,3,30.00,NULL),
+('2026-10-18','18:30','19:30','Confirmada',10,6,4,59.00,NULL),
+('2026-10-19','10:00','11:00','Confirmada',1,3,6,45.00,NULL),
+('2026-10-19','11:30','12:30','Confirmada',15,2,NULL,14.00,NULL),
+('2026-10-19','17:00','18:00','Confirmada',2,5,2,48.00,NULL),
+('2026-10-19','19:00','20:00','Pendiente',4,7,5,54.00,NULL);
+
+INSERT INTO lineasreserva VALUES
+(1,1,2,45.00,NULL),
+(1,4,1,4.50,NULL),
+(2,3,1,55.00,NULL),
+(2,5,1,5.00,NULL),
+(4,10,1,9.50,NULL),
+(7,1,1,45.00,NULL),
+(7,4,2,4.50,NULL),
+(8,3,1,55.00,NULL),
+(9,2,2,28.00,NULL),
+(13,6,1,22.00,NULL),
+(15,2,1,28.00,NULL),
+(15,4,1,4.50,NULL),
+(19,1,1,45.00,NULL),
+(20,3,1,55.00,NULL),
+(22,6,1,22.00,NULL),
+(23,2,1,28.00,NULL),
+(25,5,1,5.00,NULL),
+(26,7,1,28.00,NULL);

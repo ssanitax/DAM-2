@@ -1,0 +1,15 @@
+html,body{padding:0px;margin:0px;font-family:Ubuntu,sans-serif;
+width:100%;height:100%;background:#F3EEE4;color:#2B241C;}
+body{display:flex;flex-direction:column;}
+header{flex:1;color:#E6C36A;background:#4B2E4F;padding:10px;}
+main{flex:20;display:flex;}
+nav{flex:1;background:#4B2E4F;display:flex;flex-direction:column;
+padding:10px;gap:10px;}
+section{flex:8;}
+header h1{padding:0px;margin:0px;font-size:20px;}
+nav a{background:#F3EEE4;color:#4B2E4F;text-decoration:none;
+padding:10px;}
+section{padding:10px;}
+table{border:1px solid #C4A35A;width:100%;}
+table th{background:#4B2E4F;color:#E6C36A;}
+table td{padding:5px;color:#2B241C;background:#F3EEE4;}

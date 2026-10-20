@@ -1,0 +1,36 @@
+:root{
+	--color_corporativo:#4B2E4F;
+	--color_acento:#E6C36A;
+	--margen_interior:20px;
+	--fondo:#F3EEE4;
+	--texto:#2B241C;
+	--borde:#D9D0C3;
+}
+*{box-sizing:border-box}
+html,body{padding:0;margin:0;font-family:Ubuntu,sans-serif;width:100%;height:100%;background:var(--fondo);color:var(--texto)}
+body{display:flex;flex-direction:column}
+header{flex:0 0 auto;color:var(--color_acento);background:var(--color_corporativo);padding:var(--margen_interior);box-shadow:0 2px 8px #0002}
+header h1{padding:0;margin:0;font-size:20px}
+header p{margin:4px 0 0 0;font-size:13px;opacity:0.9}
+main{flex:1;display:flex;min-height:0}
+nav{width:170px;background:var(--color_corporativo);display:flex;flex-direction:column;padding:0 10px 20px;gap:6px;overflow:auto}
+#modulos{width:150px;padding-right:0;opacity:0.92}
+nav a{background:var(--fondo);color:var(--color_corporativo);text-decoration:none;padding:12px 14px;border-radius:4px;font-size:14px;transition:.15s}
+nav a:hover,nav a.activo{transform:translateX(3px);box-shadow:0 2px 8px #0002;font-weight:bold;background:var(--color_acento)}
+section{flex:1;padding:24px;overflow:auto;background:white;margin:16px;border-radius:8px;box-shadow:0 2px 12px #0000000d}
+.barra{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px}
+.barra h2{margin:2px 0 0;font-size:22px}
+.barra small{color:#888;font-weight:bold;letter-spacing:1px}
+.contador{background:var(--fondo);border:1px solid var(--borde);color:var(--color_corporativo);padding:6px 10px;border-radius:999px;font-size:12px;font-weight:bold}
+.tabla-contenedor{overflow:auto;border:1px solid var(--borde);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{background:var(--color_corporativo);color:var(--color_acento);text-align:left;padding:11px}
+td{padding:10px 11px;border-bottom:1px solid var(--borde)}
+tbody tr:nth-child(even){background:#FAF7F2}
+tbody tr:hover{background:#F0E8D8}
+.vacio{color:#888;padding:30px;text-align:center}
+@media(max-width:800px){
+  #modulos{display:none}
+  nav{width:135px}
+  section{margin:8px;padding:16px}
+}

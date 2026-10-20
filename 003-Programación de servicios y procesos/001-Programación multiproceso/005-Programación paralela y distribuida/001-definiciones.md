@@ -1,4 +1,5 @@
-En días anteriores hemos hecho programación distribuida
-pero en los núcleos de un procesador
+En dias anteriores hemos hecho programación distribuida
+pero en los nucleos de un procesador
 
-Que ocurre cuando nos quedamos sin hilos y núcleos en el procesador
+Que ocurre cuando nos quedamos sin hilos y nucleos en el procesador
+
