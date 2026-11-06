@@ -1,0 +1,27 @@
+[
+    {
+        "nombre": "Ana",
+        "apellidos": "Sánchez Suárez",
+        "telefono": "611223344"
+    },
+    {
+        "nombre": "Fátima",
+        "apellidos": "Quiñones Torres",
+        "telefono": "622334455"
+    },
+    {
+        "nombre": "María",
+        "apellidos": "Sánchez Suárez",
+        "telefono": "633445566"
+    },
+    {
+        "nombre": "Alba",
+        "apellidos": "Rayo González",
+        "telefono": "644556677"
+    },
+    {
+        "nombre": "Sara",
+        "apellidos": "Jiménez Torres",
+        "telefono": "655667788"
+    }
+]

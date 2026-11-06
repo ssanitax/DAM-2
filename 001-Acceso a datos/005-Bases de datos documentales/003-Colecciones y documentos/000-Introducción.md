@@ -1,2 +1,0 @@
-# Colecciones y documentos
-

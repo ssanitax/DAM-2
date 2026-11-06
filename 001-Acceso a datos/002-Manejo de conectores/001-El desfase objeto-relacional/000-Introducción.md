@@ -1,2 +1,0 @@
-# El desfase objeto-relacional
-

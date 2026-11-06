@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi tienda</title>
+  <style>
+    h1 { color: #1F4E9A; }
+  </style>
+</head>
+<body>
+  <h1>Clientes de mi tienda</h1>
+  {% for cliente in clientes %}
+    <h2>{{ cliente.nombre }}</h2>
+    <ul>
+      {% for pedido in cliente.pedidos %}
+        <li>{{ pedido.producto }}</li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+</body>
+</html>

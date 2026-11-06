@@ -1,2 +1,0 @@
-# Serializacióndeserialización de objetos
-

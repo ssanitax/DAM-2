@@ -1,0 +1,20 @@
+[
+    {
+        "nombre": "Jose Vicente",
+        "telefono": [
+            "543534",
+            "543534",
+            "543534"
+        ],
+        "email": "info@jocarsa.com"
+    },
+    {
+        "nombre": "Juan",
+        "telefono": [
+            "543534",
+            "543534",
+            "543534"
+        ],
+        "email": "info@jocarsa.com"
+    }
+]

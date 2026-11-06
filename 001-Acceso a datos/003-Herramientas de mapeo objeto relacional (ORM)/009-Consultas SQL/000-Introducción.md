@@ -1,2 +1,0 @@
-# Consultas SQL
-

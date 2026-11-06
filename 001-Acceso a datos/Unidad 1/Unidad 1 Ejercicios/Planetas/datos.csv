@@ -1,0 +1,11 @@
+﻿Column1;Mass (1024kg);Diameter (km);Density (kg/m3);Gravity (m/s2);Escape Velocity (km/s);Rotation Period (hours);Length of Day (hours);Distance from Sun (106 km);Perihelion (106 km);Aphelion (106 km);Orbital Period (days);Orbital Velocity (km/s);Orbital Inclination (degrees);Orbital Eccentricity;Obliquity to Orbit (degrees);Mean Temperature (C);Surface Pressure (bars);Number of Moons;Ring System?;Global Magnetic Field?;_1
+MERCURY;330;4879;5429;37;43;14076;42226;57.9;46.0;69.8;88.0;47.4;70;206;34;167;0;0;No;Yes;MERCURY
+VENUS;487;12,104;5243;89;104;-58325;28020;108.2;107.5;108.9;224.7;35.0;34;7;1774;464;92;0;No;No;VENUS
+EARTH;597;12,756;5514;98;112;239;240;149.6;147.1;152.1;365.2;29.8;0;17;234;15;1;1;No;Yes;EARTH
+MOON;73;3475;3340;16;24;6557;7087;0.384*;0.363*;0.406*;27.3*;1.0*;51;55;67;-20;0;0;No;No;MOON
+MARS;642;6792;3934;37;50;246;247;228.0;206.7;249.3;687.0;24.1;18;94;252;-65;0.01;2;No;No;MARS
+JUPITER;1898;142,984;1326;231;595;99;99;778.5;740.6;816.4;4331;13.1;13;49;31;-110;Unknown*;95;Yes;Yes;JUPITER
+SATURN;568;120,536;687;90;355;107;107;1432.0;1357.6;1506.5;10,747;9.7;25;52;267;-140;Unknown*;274;Yes;Yes;SATURN
+URANUS;868;51,118;1270;87;213;-172;172;2867.0;2732.7;3001.4;30,589;6.8;8;47;978;-195;Unknown*;28;Yes;Yes;URANUS
+NEPTUNE;102;49,528;1638;110;235;161;161;4515.0;4471.1;4558.9;59,800;5.4;18;10;283;-200;Unknown*;16;Yes;Yes;NEPTUNE
+PLUTO;130;2376;1850;7;13;-1533;1533;5906.4;4436.8;7375.9;90,560;4.7;172;244;1195;-225;0.00001;5;No;Unknown;PLUTO

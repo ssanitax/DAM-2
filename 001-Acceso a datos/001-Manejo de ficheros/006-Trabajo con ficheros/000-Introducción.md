@@ -1,2 +1,0 @@
-# Trabajo con ficheros
-

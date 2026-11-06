@@ -1,2 +1,0 @@
-# Excepciones detección y tratamiento
-
