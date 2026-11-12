@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="ssanitax">
+  <rect width="32" height="32" fill="#5b3cc4"/>
+  <rect x="3.25" y="3.25" width="25.5" height="25.5" fill="none" stroke="#ddd6fe" stroke-width="1.1"/>
+  <path fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M21.2 10.1c-.7-1.5-2.3-2.4-4.3-2.4-2.7 0-4.5 1.5-4.5 3.5 0 1.7 1.1 2.7 3.8 3.5l1.6.5c3.1.9 4.7 2.3 4.7 4.7 0 2.9-2.5 4.8-5.9 4.8-2.5 0-4.6-1-5.5-2.8"/>
+</svg>
