@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>RA1 · Personas por franjas (Workers)</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --panel: #1a2332;
+      --borde: #2d3a4f;
+      --texto: #e7ecf3;
+      --muted: #8b9bb4;
+      --sano: #3d8b6e;
+      --infectado: #e74c3c;
+      --recuperado: #5b8def;
+      --acento: #f0b429;
+      --ok: #3ecf8e;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      background: var(--bg); color: var(--texto);
+      font-family: "Segoe UI", system-ui, sans-serif; font-size: 14px;
+    }
+    #app {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      height: 100vh;
+    }
+    aside {
+      background: var(--panel);
+      border-right: 1px solid var(--borde);
+      padding: 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    h1 { margin: 0; font-size: 1.05rem; font-weight: 650; }
+    h1 span {
+      display: block; color: var(--muted);
+      font-size: 0.75rem; font-weight: 500; margin-top: 4px;
+    }
+    h2 {
+      margin: 0 0 8px; font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+    }
+    .bloque {
+      background: #121a24;
+      border: 1px solid var(--borde);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .idea {
+      background: #1a2818;
+      border-color: #2d5a3a;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: #c5dcc8;
+    }
+    .idea strong { color: #fff; }
+    label {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 8px; margin: 6px 0; color: var(--muted); font-size: 0.85rem;
+    }
+    input[type="range"] { width: 110px; }
+    input[type="number"] {
+      width: 64px; background: var(--bg); border: 1px solid var(--borde);
+      color: var(--texto); border-radius: 4px; padding: 4px 6px;
+    }
+    .valor {
+      color: var(--acento); font-variant-numeric: tabular-nums;
+      min-width: 2.5em; text-align: right;
+    }
+    .botones { display: flex; flex-wrap: wrap; gap: 6px; }
+    button {
+      background: #243044; color: var(--texto); border: 1px solid var(--borde);
+      border-radius: 6px; padding: 7px 10px; cursor: pointer; font-size: 0.85rem;
+    }
+    button:hover { border-color: var(--acento); }
+    button.primario { background: #2a4a3a; border-color: var(--sano); }
+    button.peligro { background: #4a2a2a; border-color: var(--infectado); }
+    .leyenda { font-size: 0.8rem; display: flex; flex-direction: column; gap: 4px; }
+    .leyenda i {
+      display: inline-block; width: 10px; height: 10px;
+      border-radius: 50%; margin-right: 6px; vertical-align: middle;
+    }
+    #monitor {
+      font-family: ui-monospace, monospace; font-size: 0.72rem;
+      line-height: 1.45; color: var(--muted); max-height: 200px; overflow-y: auto;
+    }
+    #monitor .w {
+      display: grid; grid-template-columns: 28px 1fr auto;
+      gap: 4px; padding: 3px 0; border-bottom: 1px solid #1e2836;
+    }
+    #monitor .bar {
+      height: 6px; background: #1e2836; border-radius: 3px; overflow: hidden; margin-top: 3px;
+    }
+    #monitor .bar > span { display: block; height: 100%; background: var(--ok); width: 0%; }
+    main { position: relative; overflow: hidden; background: #0a0e14; }
+    canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
+    #hud {
+      position: absolute; top: 12px; right: 12px;
+      background: rgba(15, 20, 25, 0.88); border: 1px solid var(--borde);
+      border-radius: 8px; padding: 10px 14px;
+      font-family: ui-monospace, monospace; font-size: 0.78rem;
+      line-height: 1.5; pointer-events: none; min-width: 210px;
+    }
+    #hud strong { color: var(--acento); }
+    .aviso { font-size: 0.75rem; color: var(--muted); line-height: 1.35; margin: 6px 0 0; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <aside>
+    <h1>
+      Personas por franjas
+      <span>RA1 · para qué sirve el multinúcleo aquí</span>
+    </h1>
+
+    <div class="bloque idea">
+      <strong>Qué estás viendo (importante)</strong><br>
+      No es el ejercicio de los “bichitos” de clase.<br><br>
+      Cada <strong>punto</strong> = una persona que camina.<br>
+      Las <strong>líneas amarillas</strong> = cortes del mapa.<br>
+      Cada franja la calcula un <strong>Worker distinto</strong> (otro núcleo/hilo).<br><br>
+      Si alguien cruza una línea, el maestro se lo pasa al worker vecino.
+      Eso es <strong>sincronizar procesos</strong>.
+    </div>
+
+    <div class="bloque">
+      <h2>Procesos (workers)</h2>
+      <label>Nº workers <input type="number" id="numWorkers" min="1" max="8" value="4"></label>
+      <label>Nº personas <input type="number" id="numPersonas" min="20" max="800" value="120" step="10"></label>
+      <div class="botones" style="margin-top:8px">
+        <button class="primario" id="btnReiniciar">Reiniciar pool</button>
+      </div>
+      <p class="aviso">Más workers = el mapa se parte en más franjas. Prueba 1 vs 4 y mira el monitor.</p>
+    </div>
+
+    <div class="bloque">
+      <h2>Parámetros</h2>
+      <label>
+        Radio contagio
+        <span><span class="valor" id="vRadio">14</span>
+        <input type="range" id="radioContagio" min="6" max="40" step="1" value="14"></span>
+      </label>
+      <label>
+        Prob. contagio
+        <span><span class="valor" id="vContagio">0.35</span>
+        <input type="range" id="probContagio" min="0.05" max="0.9" step="0.05" value="0.35"></span>
+      </label>
+      <label>
+        Días enfermo
+        <span><span class="valor" id="vDias">40</span>
+        <input type="range" id="diasEnfermo" min="10" max="120" step="5" value="40"></span>
+      </label>
+      <label>
+        Velocidad paseo
+        <span><span class="valor" id="vVel">1.2</span>
+        <input type="range" id="velocidad" min="0.2" max="3" step="0.1" value="1.2"></span>
+      </label>
+      <label>
+        Retraso tick (ms)
+        <span><span class="valor" id="vDelay">40</span>
+        <input type="range" id="delayTick" min="0" max="200" step="10" value="40"></span>
+      </label>
+      <label>
+        Semillas infectadas
+        <input type="number" id="semilla" min="1" max="50" value="4">
+      </label>
+    </div>
+
+    <div class="bloque">
+      <h2>Control</h2>
+      <div class="botones">
+        <button class="primario" id="btnPlay">▶ Play</button>
+        <button id="btnPaso">Paso</button>
+        <button id="btnPausa">⏸ Pausa</button>
+        <button class="peligro" id="btnBrote">Infectar 1 al azar</button>
+      </div>
+      <p class="aviso">Clic cerca de una persona = infectarla. El contagio solo ocurre si otro sano se acerca (radio).</p>
+    </div>
+
+    <div class="bloque">
+      <h2>Leyenda</h2>
+      <div class="leyenda">
+        <div><i style="background:var(--sano)"></i> Sano</div>
+        <div><i style="background:var(--infectado)"></i> Infectado (contagia cerca)</div>
+        <div><i style="background:var(--recuperado)"></i> Recuperado (ya no contagia)</div>
+        <div><i style="background:var(--acento);border-radius:0;width:14px;height:2px;vertical-align:middle"></i> Frontera entre workers</div>
+      </div>
+    </div>
+
+    <div class="bloque" style="flex:1">
+      <h2>Monitor de workers</h2>
+      <div id="monitor">Sin workers…</div>
+    </div>
+  </aside>
+
+  <main>
+    <canvas id="lienzo"></canvas>
+    <div id="hud">
+      Tick: <strong id="hTick">0</strong><br>
+      Workers: <strong id="hWorkers">0</strong><br>
+      Personas: <strong id="hPers">0</strong><br>
+      Sanos: <strong id="hSanos">0</strong><br>
+      Infectados: <strong id="hInf">0</strong><br>
+      Recuperados: <strong id="hRec">0</strong><br>
+      Migraciones: <strong id="hMig">0</strong><br>
+      Tick CPU: <strong id="hCpu">0</strong> ms<br>
+      Barrera sync: <strong id="hSync">0</strong> ms<br>
+      FPS: <strong id="hFps">0</strong>
+    </div>
+  </main>
+</div>
+
+<script>
+/*
+  MAESTRO = hilo de la página
+  ----------------------------------------
+  e) Crea workers (subprocesos)
+  f) Les manda personas / parámetros / entrantes
+  g) Espera a que TODOS contesten (barrera) y suma stats
+  h) Varias franjas en paralelo cada tick
+
+  Flujo:
+  1. Parte el mapa en N franjas y reparte personas.
+  2. Cada tick: todos los workers calculan a la vez.
+  3. Si alguien cruzó el borde → el maestro lo mueve de lista.
+  4. Pinta todas las personas y las líneas de franja.
+*/
+
+const SANO = 0, INFECTADO = 1, RECUPERADO = 2;
+const COLORES = {
+  0: "#3d8b6e",
+  1: "#e74c3c",
+  2: "#5b8def"
+};
+
+const lienzo = document.getElementById("lienzo");
+const ctx = lienzo.getContext("2d");
+const monitorEl = document.getElementById("monitor");
+
+let workers = [];
+let franjas = []; // { yMin, yMax, worker }
+let pendientes = 0;
+let resultadosTick = [];
+let jugando = false;
+let esperandoBarrera = false;
+let tick = 0;
+let tBarreraIni = 0;
+let ultimoFrame = performance.now();
+let fps = 0;
+let migracionesTick = 0;
+let proximoIdPersona = 1;
+let clickPendiente = null; // {x,y} en coords mundo
+let W = 800, H = 600;     // tamaño mundo (canvas interno)
+
+function $(id) { return document.getElementById(id); }
+
+function leerParams() {
+  return {
+    radioContagio: parseFloat($("radioContagio").value),
+    probContagio: parseFloat($("probContagio").value),
+    diasEnfermo: parseInt($("diasEnfermo").value, 10),
+    velocidad: parseFloat($("velocidad").value)
+  };
+}
+
+function enlazarSliders() {
+  [
+    ["radioContagio", "vRadio", v => v],
+    ["probContagio", "vContagio", v => Number(v).toFixed(2)],
+    ["diasEnfermo", "vDias", v => v],
+    ["velocidad", "vVel", v => Number(v).toFixed(1)],
+    ["delayTick", "vDelay", v => v]
+  ].forEach(([id, vid, fmt]) => {
+    $(id).addEventListener("input", () => {
+      $(vid).textContent = fmt($(id).value);
+      if (id !== "delayTick") {
+        const p = leerParams();
+        workers.forEach(w => w.postMessage({ tipo: "params", params: p }));
+      }
+    });
+  });
+}
+
+function ajustarCanvas() {
+  const rect = lienzo.parentElement.getBoundingClientRect();
+  W = Math.max(400, Math.floor(rect.width));
+  H = Math.max(300, Math.floor(rect.height));
+  lienzo.width = W;
+  lienzo.height = H;
+}
+
+function partirFranjas(alto, n) {
+  const base = Math.floor(alto / n);
+  const resto = alto % n;
+  const out = [];
+  let y = 0;
+  for (let i = 0; i < n; i++) {
+    const h = base + (i < resto ? 1 : 0);
+    out.push({ yMin: y, yMax: y + h });
+    y += h;
+  }
+  return out;
+}
+
+function crearPersona(x, y, estado) {
+  const ang = Math.random() * Math.PI * 2;
+  const vel = 0.4 + Math.random() * 0.6;
+  return {
+    id: proximoIdPersona++,
+    x, y,
+    vx: Math.cos(ang) * vel,
+    vy: Math.sin(ang) * vel,
+    estado,
+    dias: 0
+  };
+}
+
+function matarWorkers() {
+  workers.forEach(w => w.terminate());
+  workers = [];
+  franjas = [];
+  pendientes = 0;
+  resultadosTick = [];
+  esperandoBarrera = false;
+  jugando = false;
+  clickPendiente = null;
+}
+
+function reiniciar() {
+  matarWorkers();
+  ajustarCanvas();
+  tick = 0;
+  migracionesTick = 0;
+  proximoIdPersona = 1;
+  $("hTick").textContent = "0";
+  $("hMig").textContent = "0";
+
+  let n = parseInt($("numWorkers").value, 10) || 4;
+  n = Math.max(1, Math.min(8, n));
+  $("numWorkers").value = n;
+  $("hWorkers").textContent = String(n);
+
+  const numPers = parseInt($("numPersonas").value, 10) || 120;
+  const semillas = parseInt($("semilla").value, 10) || 4;
+  const partes = partirFranjas(H, n);
+  const params = leerParams();
+
+  // Crear todas las personas en el mundo
+  const todas = [];
+  for (let i = 0; i < numPers; i++) {
+    const estado = i < semillas ? INFECTADO : SANO;
+    todas.push(crearPersona(
+      20 + Math.random() * (W - 40),
+      20 + Math.random() * (H - 40),
+      estado
+    ));
+  }
+
+  // Repartir por franja según su Y
+  partes.forEach((parte, i) => {
+    const worker = new Worker("worker-franja.js");
+    const lote = todas.filter(p => p.y >= parte.yMin && p.y < parte.yMax);
+
+    worker.onmessage = (ev) => onWorkerMessage(i, ev.data);
+    workers.push(worker);
+    franjas.push({ yMin: parte.yMin, yMax: parte.yMax, worker, entrantes: [] });
+
+    worker.postMessage({
+      tipo: "init",
+      id: i,
+      yMin: parte.yMin,
+      yMax: parte.yMax,
+      mundoW: W,
+      mundoH: H,
+      params,
+      personas: lote
+    });
+  });
+
+  pintarMonitorInicial(n);
+  // Primera pintura vacía hasta el primer tick; lanzamos un paso
+  pintarEscena([]);
+  lanzarTick();
+}
+
+function pintarMonitorInicial(n) {
+  let html = "";
+  for (let i = 0; i < n; i++) {
+    const f = franjas[i];
+    html += `<div class="w">
+      <span>W${i}</span>
+      <span>y ${f.yMin}–${f.yMax - 1}
+        <div class="bar"><span id="bar${i}"></span></div>
+      </span>
+      <span id="t${i}">—</span>
+    </div>`;
+  }
+  monitorEl.innerHTML = html;
+}
+
+function pintarEscena(listasPersonas) {
+  ctx.fillStyle = "#0a0e14";
+  ctx.fillRect(0, 0, W, H);
+
+  // Franjas con un tono distinto para que se vea el reparto
+  for (let i = 0; i < franjas.length; i++) {
+    const f = franjas[i];
+    ctx.fillStyle = i % 2 === 0 ? "rgba(30,45,60,0.35)" : "rgba(20,30,42,0.35)";
+    ctx.fillRect(0, f.yMin, W, f.yMax - f.yMin);
+  }
+
+  // Fronteras entre workers
+  ctx.save();
+  ctx.strokeStyle = "rgba(240,180,41,0.7)";
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 4]);
+  for (let i = 1; i < franjas.length; i++) {
+    const y = franjas[i].yMin;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(W, y);
+    ctx.stroke();
+    ctx.fillStyle = "#f0b429";
+    ctx.font = "12px sans-serif";
+    ctx.setLineDash([]);
+    ctx.fillText("worker " + (i - 1) + " ↑  |  ↓ worker " + i, 10, y - 4);
+    ctx.setLineDash([6, 4]);
+  }
+  ctx.restore();
+
+  // Personas
+  const radio = parseFloat($("radioContagio").value);
+  for (let i = 0; i < listasPersonas.length; i++) {
+    const lista = listasPersonas[i] || [];
+    for (let j = 0; j < lista.length; j++) {
+      const p = lista[j];
+      // Halo de contagio solo en infectados (para entender el radio)
+      if (p.estado === INFECTADO) {
+        ctx.beginPath();
+        ctx.fillStyle = "rgba(231,76,60,0.12)";
+        ctx.arc(p.x, p.y, radio, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.beginPath();
+      ctx.fillStyle = COLORES[p.estado] || "#fff";
+      ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+}
+
+function lanzarTick() {
+  if (esperandoBarrera || workers.length === 0) return;
+  esperandoBarrera = true;
+  pendientes = workers.length;
+  resultadosTick = new Array(workers.length);
+  tBarreraIni = performance.now();
+  migracionesTick = 0;
+
+  for (let i = 0; i < workers.length; i++) {
+    const msg = {
+      tipo: "tick",
+      entrantes: franjas[i].entrantes || [],
+      infectarEn: null
+    };
+    franjas[i].entrantes = [];
+
+    // El clic se manda al worker de la franja donde se hizo clic
+    if (clickPendiente) {
+      const c = clickPendiente;
+      if (c.y >= franjas[i].yMin && c.y < franjas[i].yMax) {
+        msg.infectarEn = { x: c.x, y: c.y };
+      }
+    }
+
+    workers[i].postMessage(msg);
+  }
+  clickPendiente = null;
+}
+
+function onWorkerMessage(indice, data) {
+  if (data.tipo === "listo") return;
+  if (data.tipo === "tickResultado") {
+    resultadosTick[indice] = data;
+    pendientes--;
+    if (pendientes === 0) cerrarBarrera();
+  }
+}
+
+function cerrarBarrera() {
+  const tSync = performance.now() - tBarreraIni;
+  let cpuMax = 0;
+  let sanos = 0, infectados = 0, recuperados = 0, total = 0;
+  const listas = [];
+
+  for (let i = 0; i < resultadosTick.length; i++) {
+    const r = resultadosTick[i];
+    listas[i] = r.personas;
+    sanos += r.stats.sanos;
+    infectados += r.stats.infectados;
+    recuperados += r.stats.recuperados;
+    total += r.stats.total;
+    cpuMax = Math.max(cpuMax, r.tiempoMs);
+
+    const bar = document.getElementById("bar" + i);
+    const t = document.getElementById("t" + i);
+    if (t) t.textContent = r.tiempoMs.toFixed(2) + " ms · " + r.personas.length + " pers";
+    if (bar) bar.style.width = "100%";
+  }
+  for (let i = 0; i < resultadosTick.length; i++) {
+    const r = resultadosTick[i];
+    const bar = document.getElementById("bar" + i);
+    if (bar && cpuMax > 0) bar.style.width = ((r.tiempoMs / cpuMax) * 100).toFixed(1) + "%";
+  }
+
+  // Migraciones: gente que cruzó la frontera → al worker vecino
+  // (también las pintamos ya en el destino para que no "parpadeen")
+  for (let i = 0; i < resultadosTick.length; i++) {
+    const r = resultadosTick[i];
+    if (r.migrantesArriba && r.migrantesArriba.length) {
+      if (i > 0) {
+        franjas[i - 1].entrantes.push(...r.migrantesArriba);
+        listas[i - 1] = (listas[i - 1] || []).concat(r.migrantesArriba);
+        migracionesTick += r.migrantesArriba.length;
+      } else {
+        r.migrantesArriba.forEach(p => {
+          p.y = franjas[0].yMin + 2;
+          p.vy = Math.abs(p.vy);
+          franjas[0].entrantes.push(p);
+          listas[0].push(p);
+        });
+      }
+    }
+    if (r.migrantesAbajo && r.migrantesAbajo.length) {
+      if (i < franjas.length - 1) {
+        franjas[i + 1].entrantes.push(...r.migrantesAbajo);
+        listas[i + 1] = (listas[i + 1] || []).concat(r.migrantesAbajo);
+        migracionesTick += r.migrantesAbajo.length;
+      } else {
+        r.migrantesAbajo.forEach(p => {
+          p.y = franjas[i].yMax - 2;
+          p.vy = -Math.abs(p.vy);
+          franjas[i].entrantes.push(p);
+          listas[i].push(p);
+        });
+      }
+    }
+  }
+
+  pintarEscena(listas);
+
+  tick++;
+  $("hTick").textContent = String(tick);
+  $("hPers").textContent = String(total);
+  $("hSanos").textContent = String(sanos);
+  $("hInf").textContent = String(infectados);
+  $("hRec").textContent = String(recuperados);
+  $("hMig").textContent = String(migracionesTick);
+  $("hCpu").textContent = cpuMax.toFixed(2);
+  $("hSync").textContent = tSync.toFixed(2);
+
+  const ahora = performance.now();
+  const dt = ahora - ultimoFrame;
+  ultimoFrame = ahora;
+  if (dt > 0) fps = 0.85 * fps + 0.15 * (1000 / dt);
+  $("hFps").textContent = fps.toFixed(1);
+
+  esperandoBarrera = false;
+
+  if (jugando) {
+    const delay = parseInt($("delayTick").value, 10) || 0;
+    if (delay <= 0) requestAnimationFrame(() => lanzarTick());
+    else setTimeout(() => { if (jugando) lanzarTick(); }, delay);
+  }
+}
+
+function coordsMundo(ev) {
+  const rect = lienzo.getBoundingClientRect();
+  return {
+    x: ((ev.clientX - rect.left) / rect.width) * W,
+    y: ((ev.clientY - rect.top) / rect.height) * H
+  };
+}
+
+lienzo.addEventListener("click", (ev) => {
+  clickPendiente = coordsMundo(ev);
+  if (!jugando && !esperandoBarrera) lanzarTick();
+});
+
+$("btnReiniciar").addEventListener("click", () => { jugando = false; reiniciar(); });
+$("btnPlay").addEventListener("click", () => {
+  if (!workers.length) reiniciar();
+  jugando = true;
+  if (!esperandoBarrera) lanzarTick();
+});
+$("btnPausa").addEventListener("click", () => { jugando = false; });
+$("btnPaso").addEventListener("click", () => {
+  jugando = false;
+  if (!workers.length) reiniciar();
+  else if (!esperandoBarrera) lanzarTick();
+});
+$("btnBrote").addEventListener("click", () => {
+  // Infectar en un punto aleatorio del mapa
+  clickPendiente = {
+    x: 40 + Math.random() * (W - 80),
+    y: 40 + Math.random() * (H - 80)
+  };
+  if (!jugando && !esperandoBarrera) lanzarTick();
+});
+
+window.addEventListener("resize", () => {
+  // Solo reajuste visual si no hay simulación crítica; reinicio limpio
+});
+
+enlazarSliders();
+reiniciar();
+</script>
+</body>
+</html>
